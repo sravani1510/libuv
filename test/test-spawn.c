@@ -501,6 +501,9 @@ TEST_IMPL(spawn_stdout_and_stderr_to_file2) {
 
 TEST_IMPL(spawn_stdout_and_stderr_to_file_swap) {
 #ifndef _WIN32
+#if defined(__PASE__)
+  RETURN_SKIP("spawn_stdout_and_stderr_to_file_swap does not work on IBM i PASE");
+#endif
   int r;
   int saved_stdout;
   int saved_stderr;

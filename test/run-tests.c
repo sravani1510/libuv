@@ -226,11 +226,7 @@ static int maybe_run_test(int argc, char **argv) {
 #else
     ASSERT_GT(open_fd, 2);
     ASSERT_GT(closed_fd, 2);
-# if defined(__PASE__)  /* On IBMi PASE, write() returns 1 */
-    ASSERT_EQ(1, write(closed_fd, "x", 1));
-# else
     ASSERT_EQ(-1, write(closed_fd, "x", 1));
-# endif  /* !__PASE__ */
 #endif
     return 1;
   }
