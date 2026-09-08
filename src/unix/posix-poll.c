@@ -291,6 +291,16 @@ void uv__io_poll(uv_loop_t* loop, int timeout) {
       uv__signal_event(loop, &loop->signal_io_watcher, POLLIN);
     }
 
+#if defined(__PASE__)
+    /* On IBM i PASE, SIGCHLD delivery is unreliable when many fork() calls
+     * fail in rapid succession: the non-blocking signal pipe write can return
+     * EAGAIN, silently dropping the notification.  Call uv__wait_children()
+     * unconditionally after every poll() iteration so that zombie children are
+     * always reaped, even when the SIGCHLD-triggered signal pipe write was
+     * dropped.  This prevents the event loop from hanging indefinitely. */
+    uv__wait_children(loop);
+#endif
+
     loop->poll_fds_iterating = 0;
 
     /* Purge invalidated fds from our poll fds array.  */

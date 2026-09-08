@@ -50,6 +50,18 @@ static void closefd(int fd) {
   if (close(fd) == 0 || errno == EINTR || errno == EINPROGRESS)
     return;
 
+#if defined(__PASE__)
+  /* On IBM i PASE, close() can return EBADF for a pipe fd that was created in
+   * an ancestor fork context (e.g. UV_TEST_RUNNER_FD) and then inherited by a
+   * grandchild process.  PASE's per-job fd ownership model may revoke the fd
+   * before the grandchild reaches this point.  Treat EBADF as non-fatal: the
+   * fd is either already closed or not closeable in this process context, and
+   * aborting here would kill the child test process with SIGABRT before it has
+   * a chance to run. */
+  if (errno == EBADF)
+    return;
+#endif
+
   perror("close");
   abort();
 }
