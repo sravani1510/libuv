@@ -148,6 +148,11 @@ void uv__io_poll(uv_loop_t* loop, int timeout) {
   int user_timeout;
   int reset_timeout;
 
+  /* user_timeout is set in the UV_METRICS_IDLE_TIME branch below; initialise
+   * it here to silence -Wmaybe-uninitialized on compilers that cannot prove
+   * the reset_timeout guard always covers the uses of user_timeout. */
+  user_timeout = 0;
+
   if (loop->nfds == 0) {
     assert(uv__queue_empty(&loop->watcher_queue));
     return;

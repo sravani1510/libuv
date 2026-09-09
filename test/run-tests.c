@@ -183,6 +183,16 @@ static int maybe_run_test(int argc, char **argv) {
 
     notify_parent_process();
 
+#if defined(__PASE__)
+    /* On IBM i PASE, after exec() with fds 1 and 2 replaced via dup2() in the
+     * spawning parent, the C library FILE* objects for stdout and stderr may
+     * carry stale error flags from the pre-exec stdio state.  Clearing them
+     * here ensures that subsequent fprintf() calls succeed and return the
+     * correct byte count, preventing a false ASSERT_GT failure and SIGABRT. */
+    clearerr(stdout);
+    clearerr(stderr);
+#endif
+
     r = fprintf(stdout, "hello world\n");
     ASSERT_GT(r, 0);
 
