@@ -354,7 +354,7 @@ endif
 
 if AIX
 libuv_la_LDFLAGS += -Wl,-bbigtoc
-test_run_tests_LDFLAGS = $(AM_LDFLAGS) -Wl,-bbigtoc
+test_run_tests_LDFLAGS += -Wl,-bbigtoc
 test_run_tests_CFLAGS += -D_ALL_SOURCE \
                          -D_XOPEN_SOURCE=500 \
                          -D_LINUX_SOURCE_COMPAT
