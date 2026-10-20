@@ -264,7 +264,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "AIX")
        _THREAD_SAFE
        _XOPEN_SOURCE=500
        HAVE_SYS_AHAFS_EVPRODS_H)
-  list(APPEND uv_ldflags -bbigtoc)
+  list(APPEND uv_ldflags "-Wl,-bbigtoc")
   list(APPEND uv_libraries perfstat)
   list(APPEND uv_sources
        src/unix/aix.c
