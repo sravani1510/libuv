@@ -353,6 +353,7 @@ test_run_tests_SOURCES += test/runner-unix.c \
 endif
 
 if AIX
+libuv_la_LDFLAGS = $(AM_LDFLAGS) -bbigtoc
 test_run_tests_CFLAGS += -D_ALL_SOURCE \
                          -D_XOPEN_SOURCE=500 \
                          -D_LINUX_SOURCE_COMPAT
